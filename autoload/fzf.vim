@@ -9,21 +9,22 @@ endfunction
 
 function s:collect(...)
 	let root = getcwd()
-	silent bdelete!
+	if has('nvim')
+		let path = getline(1)
+	else
+		let path = term_getline(b:term_buf, 1)
+	endif
 
-	let result = a:000[0]
-	if filereadable(result)
-		let lines = readfile(result)
-		if len(lines) == 1
-			execute 'edit '.root.'/'.lines[0]
-		endif
-		call delete(result)
+	silent close
+
+	if filereadable(path)
+		execute 'edit '.root.'/'.path
 	endif
 endfunction
 
-function! fzf#Open()
-	let result = tempname()
+let s:OnExit = function('s:collect')
 
+function! fzf#Open()
 	keepalt below 9 new
 
 	let root = s:findRoot()
@@ -32,13 +33,11 @@ function! fzf#Open()
 	endif
 
 	if has('nvim')
-		let options = {'name':'FZF'}
-		let options["on_exit"] = function('s:collect', [result])
-		call termopen(['sh', '-c', 'fzf > '.result], options)
+		let options = {'on_exit': s:OnExit}
+		call termopen('fzf', options)
 		startinsert
 	else
-		let options = {'term_finish':'close','term_name':'FZF', 'curwin':1}
-		let options["exit_cb"] = function('s:collect', [result])
-		call term_start(['sh', '-c', 'fzf > '.result], options)
+		let options = {'term_name':'FZF','curwin':1,'exit_cb':s:OnExit}
+		let b:term_buf = term_start('fzf', options)
 	endif
 endfunction
