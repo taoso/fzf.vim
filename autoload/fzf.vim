@@ -15,7 +15,6 @@ function s:collect(...)
 	if filereadable(result)
 		let lines = readfile(result)
 		if len(lines) == 1
-			echomsg lines[0]
 			execute 'edit '.root.'/'.lines[0]
 		endif
 		call delete(result)
@@ -25,7 +24,7 @@ endfunction
 function! fzf#Open()
 	let result = tempname()
 
-	execute 'keepalt below 9 new'
+	keepalt below 9 new
 
 	let root = s:findRoot()
 	if root != '.'
