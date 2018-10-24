@@ -7,7 +7,7 @@ function s:findRoot()
 	return "."
 endfunction
 
-function s:collect(...)
+function OpenFile(...)
 	let root = getcwd()
 	if has('nvim')
 		let path = getline(1)
@@ -22,8 +22,6 @@ function s:collect(...)
 	endif
 endfunction
 
-let s:OnExit = function('s:collect')
-
 function! fzf#Open()
 	keepalt below 9 new
 
@@ -33,11 +31,11 @@ function! fzf#Open()
 	endif
 
 	if has('nvim')
-		let options = {'on_exit': s:OnExit}
+		let options = {'on_exit': 'OpenFile'}
 		call termopen('fzf', options)
 		startinsert
 	else
-		let options = {'term_name':'FZF','curwin':1,'exit_cb':s:OnExit}
+		let options = {'term_name':'FZF','curwin':1,'exit_cb':'OpenFile'}
 		let b:term_buf = term_start('fzf', options)
 	endif
 endfunction
