@@ -23,7 +23,7 @@ function OpenFile(...)
 endfunction
 
 function! fzf#Open()
-	keepalt below 9 new
+	keepalt bo 9 new
 
 	let root = s:findRoot()
 	if root != '.'
