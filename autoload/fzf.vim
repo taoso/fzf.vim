@@ -17,8 +17,9 @@ function OpenFile(...)
 
 	silent close
 
-	if filereadable(path)
-		execute 'edit '.root.'/'.path
+	let full_path = root.'/'.path
+	if filereadable(full_path)
+		execute 'edit '.full_path
 	endif
 endfunction
 
