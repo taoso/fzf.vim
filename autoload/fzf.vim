@@ -36,7 +36,7 @@ function! fzf#Open()
 		call termopen('fzf', options)
 		startinsert
 	else
-		let options = {'term_name':'FZF','curwin':1,'exit_cb':'OpenFile'}
+		let options = {'term_name':' FZF','curwin':1,'exit_cb':'OpenFile'}
 		let b:term_buf = term_start('fzf', options)
 	endif
 endfunction
