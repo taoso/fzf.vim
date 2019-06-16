@@ -19,6 +19,9 @@ function OpenFile(...)
 
 	let full_path = root.'/'.path
 	if filereadable(full_path)
+		while &buftype != ""
+			execute 'wincmd w'
+		endwhile
 		execute 'edit '.full_path
 	endif
 endfunction
