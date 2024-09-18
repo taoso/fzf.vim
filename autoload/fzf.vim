@@ -27,7 +27,24 @@ function OpenFile(...)
 endfunction
 
 function! fzf#Open()
-	keepalt bo 9 new
+	if has('nvim')
+		let buf = nvim_create_buf(v:false, v:true)
+
+		let ui = nvim_list_uis()[0]
+		let w = float2nr(floor(ui.width*0.8))
+		let h = float2nr(floor(ui.height*0.5))
+		let opts = {'relative': 'editor',
+                          \ 'border': "rounded",
+                          \ 'width': w,
+                          \ 'height': h,
+                          \ 'col': (ui.width - w) / 2,
+                          \ 'row': ui.height / 3 - h / 2,
+                          \ 'style': 'minimal',
+                          \ }
+		call nvim_open_win(buf, 1, opts)
+	else
+		keepalt bo 9 new
+	endif
 
 	let root = s:findRoot()
 	if root != '.'
